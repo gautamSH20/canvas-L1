@@ -54,28 +54,52 @@ const ctx = canvas.getContext("2d");
 //   ctx.stroke();
 // }
 
-var x = 200;
-var dx = 10;
-var y = 200;
-var dy = 10;
-var radius = 50;
-var h = 100;
-var w = 100;
+function Circle(x, y, dx, dy, radius) {
+  this.x = x;
+  this.y = y;
+  this.dx = dx;
+  this.dy = dy;
+
+  this.radius = radius;
+
+  this.draw = function () {
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
+    ctx.stroke();
+    ctx.fill();
+  };
+  this.update = function () {
+    if (this.x + this.radius > innerWidth || this.x - this.radius < 0) {
+      this.dx = -this.dx;
+    }
+    if (this.y + this.radius > innerHeight || this.y - this.radius < 0) {
+      this.dy = -this.dy;
+    }
+    this.x += this.dx;
+    this.y += this.dy;
+    this.draw();
+  };
+}
+
+var cricleArray = [];
+
+for (let i = 0; i < 100; i++) {
+  var radius = 50;
+  var x = Math.random() * (innerWidth - radius * 2) + radius;
+  var y = Math.random() * (innerHeight - radius * 2) + radius;
+  var dx = Math.random() - 0.5;
+  var dy = Math.random() - 0.5;
+  cricleArray.push(new Circle(x, y, dx, dy, radius));
+}
+
+console.log(cricleArray);
+
 function animateion() {
   requestAnimationFrame(animateion);
   ctx.clearRect(0, 0, innerWidth, innerHeight);
-  ctx.beginPath();
-  ctx.arc(x, y, radius, 0, Math.PI * 2, false);
-  ctx.stroke();
-
-  if (x + radius > innerWidth || x - radius < 0) {
-    dx = -dx;
+  for (let i = 0; i < cricleArray.length; i++) {
+    cricleArray[i].update();
   }
-  if (y + radius > innerHeight || y - radius < 0) {
-    dy = -dy;
-  }
-  x += dx;
-  y += dy;
 }
 
 animateion();
